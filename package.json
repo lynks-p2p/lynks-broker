@@ -1,8 +1,8 @@
 {
-  "name": "express-mongoose-es6-rest-api",
+  "name": "lynks-broker",
   "version": "1.0.0",
-  "description": "A Boilerplate application for building REST APIs using express, mongoose in ES6 with code coverage",
-  "author": "Kunal Kapadia <kunalkapadia12@gmail.com>",
+  "description": "Broker for Lynks, Peer-to-Peer cloud storage",
+  "author": "Mansour Kheffache <mansourk@aucegypt.edu>",
   "main": "index.js",
   "private": false,
   "engines": {
@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:KunalKapadia/express-mongoose-es6-rest-api.git"
+    "url": "git@github.com:lynks-p2p/lynks-broker.git"
   },
   "keywords": [
     "express",
@@ -50,7 +50,7 @@
     "express-winston": "2.1.0",
     "helmet": "3.1.0",
     "http-status": "^0.2.0",
-    "joi": "10.0.2",
+    "joi": "^9.0.4",
     "jsonwebtoken": "7.1.9",
     "method-override": "^2.3.5",
     "mongoose": "4.7.1",
@@ -69,8 +69,6 @@
     "cz-conventional-changelog": "1.2.0",
     "del": "^2.2.0",
     "eslint": "3.11.1",
-    "eslint-config-airbnb-base": "7.1.0",
-    "eslint-plugin-import": "1.16.0",
     "eslint-watch": "2.1.14",
     "ghooks": "^1.2.4",
     "gulp": "3.9.1",
