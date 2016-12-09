@@ -9,13 +9,13 @@ import APIError from '../helpers/APIError';
 const ShredHostSchema = new mongoose.Schema({
 
   hostId: {
-    type: ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref : 'User',
     required: true,
   },
 
   shredId: {
-    type: ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref : 'Shred',
     required: true,
   }
@@ -24,14 +24,14 @@ const ShredHostSchema = new mongoose.Schema({
 /**
  * Methods
  */
-ShredSchema.method({
+ShredHostSchema.method({
 
 });
 
 /**
  * Statics
  */
-ShredSchema.statics = {
+ShredHostSchema.statics = {
   /**
    * Get user
    * @param {ObjectId} id - The objectId of user.
@@ -50,4 +50,4 @@ ShredSchema.statics = {
   },
 };
 
-export default mongoose.model('ShredHost', SchredSchema);
+export default mongoose.model('ShredHost', ShredHostSchema);

@@ -12,7 +12,7 @@ const ShredSchema = new mongoose.Schema({
     required: true
   },*/
   ownerId: {
-    type: ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref : 'User',
     required: true
   },
@@ -52,4 +52,4 @@ ShredSchema.statics = {
   },
 };
 
-export default mongoose.model('Shred', SchredSchema);
+export default mongoose.model('Shred', ShredSchema);
