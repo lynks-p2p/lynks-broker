@@ -12,7 +12,7 @@ router.post('/signup/:username/:capacity', validate(paramValidation.createUser),
 router.post('/signin/:username', validate(paramValidation.login), userCtrl.get);
 
   //** PUT /api/users/:capacity - update_capacity */
-router.put('/update_capacity/:userId/:capacity',validate(paramValidation.updateUser), userCtrl.update);
+router.put('/update_capacity/:userId/:capacity',validate(paramValidation.updateUser), userCtrl.updateCapacity);
 
   /** DELETE /api/users/:userId - leave */
 router.delete('/leave/:userId',userCtrl.remove);
