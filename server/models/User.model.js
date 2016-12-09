@@ -9,7 +9,8 @@ import APIError from '../helpers/APIError';
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   fileMap: {
     type: String,
@@ -51,6 +52,40 @@ UserSchema.statics = {
       .exec()
       .then((user) => {
         if (user) {
+          return user;
+        }
+        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+        return Promise.reject(err);
+      });
+  },
+
+  remove(username) {
+    return this.findOneaAndRemove({username: username})
+      .exec();
+  },
+
+
+  updateCap(username, capacity) {
+    return this.findOne({username: username})
+      .exec()
+      .then((user) => {
+        if (user) {
+          user.capacity= capacity;
+          user.save();          //we assume that it is possible to save here
+          return user;
+        }
+        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+        return Promise.reject(err);
+      });
+  },
+
+  updateMap(username, fileMap) {
+    return this.findOne({username: username})
+      .exec()
+      .then((user) => {
+        if (user) {
+          user.fileMap= fileMap;
+          user.save();          //we assume that it is possible to save here
           return user;
         }
         const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
