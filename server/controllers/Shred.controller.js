@@ -2,8 +2,8 @@ import Shred from '../models/Shred.model';
 /*create new shred. */
 function create(req, res, next) {
   const shred = new Shred({
-    ownerId: req.body.ownerid,
-    shredSize: req.body.shredsize
+    ownerId: req.params.ownerid,
+    shredSize: req.params.shredsize
   });
 
   shred.save()
@@ -11,11 +11,11 @@ function create(req, res, next) {
     .catch(e => next(e));
 }
 /*Load shred and append to req.*/
-function get(req, res,next,id) {
-  Shred.get(id)
+function get(req, res,next) {
+  Shred.get(req.params.shredId)
     .then((shred) => {
       req.shred = shred;
-      return next();
+      return res.json(shred);
     })
     .catch(e => next(e));
 }
