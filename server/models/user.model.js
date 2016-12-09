@@ -11,16 +11,16 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  mobileNumber: {
+  fileMap: {
     type: String,
-    required: true,
-    match: [/^[1-9][0-9]{9}$/, 'The value of path {PATH} ({VALUE}) is not a valid mobile number.']
+    required: true
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  capacity: {       //user's offered capacity by MB
+    type: Number,
+    required: true
   }
 });
+
 
 /**
  * Add your
@@ -33,6 +33,8 @@ const UserSchema = new mongoose.Schema({
  * Methods
  */
 UserSchema.method({
+
+
 });
 
 /**
@@ -64,7 +66,6 @@ UserSchema.statics = {
    */
   list({ skip = 0, limit = 50 } = {}) {
     return this.find()
-      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .exec();
