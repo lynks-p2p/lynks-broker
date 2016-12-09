@@ -33,10 +33,9 @@ const UserSchema = new mongoose.Schema({
 /**
  * Methods
  */
-UserSchema.method({
+UserSchema.methods = {
 
-
-});
+};
 
 /**
  * Statics
@@ -84,7 +83,7 @@ UserSchema.statics = {
       .exec()
       .then((user) => {
         if (user) {
-          user.fileMap= fileMap;
+          user.fileMap = fileMap;
           user.save();          //we assume that it is possible to save here
           return user;
         }
