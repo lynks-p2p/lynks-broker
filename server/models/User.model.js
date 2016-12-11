@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
   },
   fileMap: {
     type: String,
-    required: true
+    default: ''
   },
   // user's offered storage capacity in MB
   capacity: {
