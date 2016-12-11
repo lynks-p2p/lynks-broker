@@ -1,13 +1,24 @@
-// import whatever
+import ShredCtrl from '../controllers/Shred.controller';
 
-/**
- * Comment the function
- */
-function name(req, res, next, any, other, params) {
-  // DO IT
 
-  // dumb
-  return req + res + next + any + other + params;
+const defaultShredSize = 1024;
+
+function store(req, res, next) {
+  // const ownerId = req.param.userId;
+  // const lastShredSize = req.param.lastSize;
+  // const nShreds = req.param.nShreds;
+
+  // for (let i = 0; i < nShreds - 1)
+
+  ShredCtrl.create(req, res, next);
 }
 
-export default { name };
+function retrieve(req, res, next) {
+  return req + res + next * defaultShredSize;
+}
+
+function remove(req, res, next) {
+  return req + res + next;
+}
+
+export default { store, retrieve, remove };
