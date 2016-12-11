@@ -1,33 +1,30 @@
 import Shred from '../models/Shred.model';
 
 // create new shred
-function create(req, res, next) {
+function createShred(ownerId, shredSize, next) {
   const shred = new Shred({
-    owner: req.body.userId,
-    size: req.body.shredSize
+    owner: ownerId,
+    size: shredSize
   });
 
+  let shredId;
   shred.save()
-    .then(savedShred => res.json(savedShred))
+    .then((savedShred) => {
+      shredId = savedShred._id;
+    })
     .catch(e => next(e));
+
+  return shredId;
 }
 
 // Load shred and return it in response
-function get(req, res, next) {
-  Shred.findOne({_id: req.body.shredId})
-    .then((shred) => res.json(shred))
-    .catch(e => next(e));
+function getShred(shredId) {
+  return Shred.findOne({_id: shredId});
 }
 
 // remove shred
-function remove(req, res, next) {
-  Shred.findOne({_id: req.body.shredId})
-    .then(deletedShred => {
-      Shred.remove({_id: deletedShred._id})
-        .then(() => res.json(deletedShred))
-        .catch(e => next(e));
-    })
-    .catch(e => next(e));
+function removeShred(shredId) {
+  return Shred.findOne({_id: shredId}).remove();
 }
 
-export default { create, get, remove };
+export default { createShred, getShred, removeShred };

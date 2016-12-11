@@ -1,48 +1,46 @@
 // uncomment this
 import ShredHost from '../models/ShredHost.model';
 
-function create(req, res, next) {
+function createShredHostEntry(shredId, hostId, next) {
   const newShredHost= new ShredHost({
-    shred : req.body.shredId,
-    host  : req.body.hostId
+    shred: shredId,
+    host: hostId
   });
 
   newShredHost.save()
-    .then(savedShredHost => res.json(savedShredHost))
-    .catch(e=>next(e));
-}
-
-function getHostsFor(req, res, next) {
-  ShredHost.find({shred: req.body.shredId})
-    .then(hosts => res.json(hosts))
+    .return()
     .catch(e => next(e));
 }
 
-function getShredsOn(req, res, next) {
-  ShredHost.find({host: req.body.hostId})
-    .then(shreds => res.json(shreds))
+function getHostsFor(shredId, next) {
+  ShredHost.find({shred: shredId})
+    .then(hosts => {return hosts;})
     .catch(e => next(e));
 }
 
-function updateShredHost(req, res, next) {
-  ShredHost.findOne({shred: req.body.shredId, host: req.body.hostId})
+function getShredsOn(hostId, next) {
+  ShredHost.find({host: hostId})
+    .then(shreds => {return shreds;})
+    .catch(e => next(e));
+}
+
+function updateShredHost(shredId, hostId, newHostId, next) {
+  ShredHost.findOne({shred: shredId, host: hostId})
     .then((shredHost) => {
-      shredHost.host = req.body.newHostId;
+      shredHost.host = newHostId;
       shredHost.save()
-        .then(savedShredHost => res.json(savedShredHost))
+        .then(savedShredHost => {return savedShredHost;})
         .catch(e => next(e));
     })
     .catch(e=>next(e));
 }
 
 // to be completed
-function remove(req, res, next) {
-  ShredHost.findOne({shred: req.params.shredId, host: req.params.hostId })
+function removeShredHostEntry(shredId, hostId, next) {
+  ShredHost.findOne({shred: shredId, host: hostId})
     .remove()
-    .exec()
-    .then(shredHost => res.json(shredHost))
+    .then(shredHost => {return shredHost;})
     .catch(e => next(e));
 }
 
-
-export default { create, getHostsFor, getShredsOn, updateShredHost, remove };
+export default { createShredHostEntry, getHostsFor, getShredsOn, updateShredHost, removeShredHostEntry };
