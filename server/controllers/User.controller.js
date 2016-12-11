@@ -44,7 +44,7 @@ function updateCapacity(req,res,next){
     .catch(e=>next(e));
 }
 
-function updateFilemap(req,res,next){
+function updateFilemap(req, res, next){
   User.findOne({_id: req.body._id})
     .then((user) => {
       user.fileMap = req.body.fileMap;
@@ -55,4 +55,27 @@ function updateFilemap(req,res,next){
     .catch(e=>next(e));
 }
 
-export default { create, get, remove, updateFilemap, updateCapacity };
+function selectPeers(userId, nPeers) {
+  const peersList = [];
+
+  for (let i = 0; i < nPeers; i = i + 1) {
+    // Get the count of all users
+    User.count().exec((err, count) => {
+
+      // Get a random entry
+      var random = Math.floor(Math.random() * count);
+
+      // Again query all users but only fetch one offset by our random #
+      User.findOne()
+        .skip(random)
+        .exec((err, result) => {
+          // Tada! random user
+          peersList.push(result._id);
+        });
+    });
+  }
+
+  return peersList;
+}
+
+export default { create, get, remove, updateFilemap, updateCapacity, selectPeers };
