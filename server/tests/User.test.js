@@ -17,7 +17,7 @@ after((done) => {
 
 describe('## User APIs', () => {
   let user = {
-    username: 'Dude',
+    username: 'John',
     capacity: 200 //mb
   };
 
