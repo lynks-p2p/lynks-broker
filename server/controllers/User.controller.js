@@ -1,26 +1,25 @@
 import User from '../models/User.model';
 
 function create(req, res, next) {
-
-  const newuser= new User({
-    username: req.params.username,
-    capacity: req.params.capacity,
+  const newUser=  new User({
+    username: req.body.username,
+    capacity: req.body.capacity,
     fileMap: ''
   });
-  newuser.save()
+  newUser.save()
     .then(savedUser => res.json(savedUser))
-    .catch(e=>next(e));
+    .catch(e => next(e));
 }
 
-function get(req, res, next){
-  User.findOne({username: req.params.username})
+function get(req, res, next) {
+  User.findOne({_id: req.body.userId})
     .then(user => res.json(user))
-    .catch(e=>next(e));
-
+    .catch(e => next(e));
 }
 
-function remove(req, res, next){ //to be completed
-  User.findOne({username: req.params.username})
+// to be completed
+function remove(req, res, next) {
+  User.findOne({_id: req.body.userId})
     .then(user => {
       // signal to delete the data of the leaving user
       // remove the shreds entries related to the leaving user
@@ -30,16 +29,14 @@ function remove(req, res, next){ //to be completed
       // create new enteries concering the new selected peer and the shreds(that was once hosted on the leaving peer)
       // get user id, remove id from user table
       res.json(user);
-    }
-      )
-    .catch(e=>next(e));
-
+    })
+    .catch(e => next(e));
 }
 
 function updateCapacity(req,res,next){
-  User.findOne({username: req.params.username})
+  User.findOne({_id: req.body.userId})
     .then((user) => {
-      user.capacity = req.params.capacity;
+      user.capacity = req.body.capacity;
       user.save()
         .then(savedUser => res.json(savedUser))
         .catch(e => next(e));
@@ -48,9 +45,9 @@ function updateCapacity(req,res,next){
 }
 
 function updateFilemap(req,res,next){
-  User.findOne({username: req.params.username})
+  User.findOne({_id: req.body.userId})
     .then((user) => {
-      user.fileMap = req.params.fileMap;
+      user.fileMap = req.body.fileMap;
       user.save()
         .then(savedUser => res.json(savedUser))
         .catch(e => next(e));
