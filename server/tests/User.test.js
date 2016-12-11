@@ -9,6 +9,9 @@ chai.config.includeStack = true;
 
 after((done) => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
+  mongoose.connection.collections['users'].drop( (err) => {
+    if (err) return done(err);
+  });
   mongoose.models = {};
   mongoose.modelSchemas = {};
   mongoose.connection.close();
