@@ -7,14 +7,12 @@ import APIError from '../helpers/APIError';
  * ShredHost Schema
  */
 const ShredHostSchema = new mongoose.Schema({
-
-  hostId: {
+  host: {
     type: mongoose.Schema.Types.ObjectId,
     ref : 'User',
     required: true,
   },
-
-  shredId: {
+  shred: {
     type: mongoose.Schema.Types.ObjectId,
     ref : 'Shred',
     required: true,
@@ -24,30 +22,23 @@ const ShredHostSchema = new mongoose.Schema({
 /**
  * Methods
  */
-ShredHostSchema.method({
+ShredHostSchema.methodName = () => {
 
-});
+};
 
 /**
  * Statics
  */
-ShredHostSchema.statics = {
-  /**
-   * Get user
-   * @param {ObjectId} id - The objectId of user.
-   * @returns {Promise<User, APIError>}
-   */
-  get(id) {
-    return this.findById(id)
-      .exec()
-      .then((shredHost) => {
-        if (shredHost) {
-          return shredHost;
-        }
-        const err = new APIError('No such shredHost exists!', httpStatus.NOT_FOUND);
-        return Promise.reject(err);
-      });
-  },
+ShredHostSchema.statics.get = (id) => {
+  return this.findById(id)
+    .exec()
+    .then((shredHost) => {
+      if (shredHost) {
+        return shredHost;
+      }
+      const err = new APIError('No such shredHost exists!', httpStatus.NOT_FOUND);
+      return Promise.reject(err);
+    });
 };
 
 export default mongoose.model('ShredHost', ShredHostSchema);
