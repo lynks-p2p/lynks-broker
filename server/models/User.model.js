@@ -16,97 +16,79 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  capacity: {       //user's offered capacity by MB
+  // user's offered storage capacity in MB
+  capacity: {
     type: Number,
     required: true
   }
 });
 
-
-/**
- * Add your
- * - pre-save hooks
- * - validations
- * - virtuals
- */
-
 /**
  * Methods
  */
-UserSchema.methods = {
+UserSchema.methods.methodName = () => {
 
 };
 
 /**
  * Statics
  */
-UserSchema.statics = {
-  /**
-   * Get user
-   * @param {ObjectId} id - The objectId of user.
-   * @returns {Promise<User, APIError>}
-   */
-  get(username) {
-    return this.findOne({username: username})
-      .exec()
-      .then((user) => {
-        if (user) {
-          return user;
-        }
-        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
-        return Promise.reject(err);
-      });
-  },
+UserSchema.statics.get = (userId) => {
+  return this.findOne({_id: userId})
+    .exec()
+    .then((user) => {
+      if (user) {
+        return user;
+      }
+      const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+      return Promise.reject(err);
+    });
+};
 
-  remove(username) {
-    return this.findOneaAndRemove({username: username})
-      .exec();
-  },
+UserSchema.statics.remove = (userId) => {
+  return this.findOneaAndRemove({_id: userId})
+    .exec();
+};
 
+// we assume that it is possible to save here -- double check?
+UserSchema.statics.updateCap = (userId, capacity) => {
+  return this.findOne({_id: userId})
+    .exec()
+    .then((user) => {
+      if (user) {
+        user.capacity= capacity;
+        user.save();
+        return user;
+      }
+      const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+      return Promise.reject(err);
+    });
+};
 
-  updateCap(username, capacity) {
-    return this.findOne({username: username})
-      .exec()
-      .then((user) => {
-        if (user) {
-          user.capacity= capacity;
-          user.save();          //we assume that it is possible to save here
-          return user;
-        }
-        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
-        return Promise.reject(err);
-      });
-  },
-
-  updateMap(username, fileMap) {
-    return this.findOne({username: username})
-      .exec()
-      .then((user) => {
-        if (user) {
-          user.fileMap = fileMap;
-          user.save();          //we assume that it is possible to save here
-          return user;
-        }
-        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
-        return Promise.reject(err);
-      });
-  },
+UserSchema.statics.updateMap = (userId, fileMap) => {
+  return this.findOne({_id: userId})
+    .exec()
+    .then((user) => {
+      if (user) {
+        user.fileMap = fileMap;
+        user.save();          //we assume that it is possible to save here
+        return user;
+      }
+      const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+      return Promise.reject(err);
+    });
+};
 
   /**
    * List users in descending order of 'createdAt' timestamp.
-   * @param {number} skip - Number of users to be skipped.
-   * @param {number} limit - Limit number of users to be returned.
-   * @returns {Promise<User[]>}
-   */
+
   list({ skip = 0, limit = 50 } = {}) {
     return this.find()
       .skip(skip)
       .limit(limit)
       .exec();
   }
-};
+};*/
 
-/**
- * @typedef User
- */
+
 export default mongoose.model('User', UserSchema);
