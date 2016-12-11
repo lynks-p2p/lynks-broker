@@ -10,7 +10,8 @@ const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    default: 'Generic'
+    // unique: true
   },
   fileMap: {
     type: String,
@@ -19,7 +20,8 @@ const UserSchema = new mongoose.Schema({
   // user's offered storage capacity in MB
   capacity: {
     type: Number,
-    required: true
+    required: true,
+    default: 0
   }
 });
 

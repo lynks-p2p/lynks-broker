@@ -17,6 +17,10 @@ function store(req, res, next) {
       host: peersList[i]
     });
   }
+
+
+    // console.log('hi');
+    // console.log(peersList);
   // assign a peer to the last shred with size < default size
   hostList.push({
     shred: createShred(req.body.userId, req.body.lastSize, next),
