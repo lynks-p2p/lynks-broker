@@ -3,8 +3,8 @@ import Shred from '../models/Shred.model';
 // create new shred
 function create(req, res, next) {
   const shred = new Shred({
-    owner: req.body.owner,
-    size: req.body.shredsize
+    owner: req.body.userId,
+    size: req.body.shredSize
   });
 
   shred.save()
@@ -15,7 +15,7 @@ function create(req, res, next) {
 // Load shred and return it in response
 function get(req, res, next) {
   Shred.findOne({_id: req.body.shredId})
-    .then((shred) => res.json(shred)})
+    .then((shred) => res.json(shred))
     .catch(e => next(e));
 }
 
