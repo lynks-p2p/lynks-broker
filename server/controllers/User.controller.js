@@ -12,14 +12,14 @@ function create(req, res, next) {
 }
 
 function get(req, res, next) {
-  User.findOne({_id: req.body.userId})
+  User.findOne({_id: req.body._id})
     .then(user => res.json(user))
     .catch(e => next(e));
 }
 
 // to be completed
 function remove(req, res, next) {
-  User.findOne({_id: req.body.userId})
+  User.findOne({_id: req.body._id})
     .then(user => {
       // signal to delete the data of the leaving user
       // remove the shreds entries related to the leaving user
@@ -34,7 +34,7 @@ function remove(req, res, next) {
 }
 
 function updateCapacity(req,res,next){
-  User.findOne({_id: req.body.userId})
+  User.findOne({_id: req.body._id})
     .then((user) => {
       user.capacity = req.body.capacity;
       user.save()
@@ -45,7 +45,7 @@ function updateCapacity(req,res,next){
 }
 
 function updateFilemap(req,res,next){
-  User.findOne({_id: req.body.userId})
+  User.findOne({_id: req.body._id})
     .then((user) => {
       user.fileMap = req.body.fileMap;
       user.save()
