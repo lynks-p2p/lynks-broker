@@ -40,72 +40,89 @@ describe('## User APIs', () => {
         .catch(done);
     });
   });
-/*
-  describe('# GET /api/users/:userId', () => {
-    it('should get user details', (done) => {
+  describe('# POST /api/users/signin', () => {
+    it('should login the new user', (done) => {
       request(app)
-        .get(`/api/users/${user._id}`)
-        .expect(httpStatus.OK)
-        .then((res) => {
-          expect(res.body.username).to.equal(user.username);
-          expect(res.body.mobileNumber).to.equal(user.mobileNumber);
-          done();
-        })
-        .catch(done);
-    });
-
-    it('should report error with message - Not found, when user does not exists', (done) => {
-      request(app)
-        .get('/api/users/56c787ccc67fc16ccc1a5e92')
-        .expect(httpStatus.NOT_FOUND)
-        .then((res) => {
-          expect(res.body.message).to.equal('Not Found');
-          done();
-        })
-        .catch(done);
-    });
-  });
-
-  describe('# PUT /api/users/:userId', () => {
-    it('should update user details', (done) => {
-      user.username = 'KK';
-      request(app)
-        .put(`/api/users/${user._id}`)
+        .post('/api/users/signin')
         .send(user)
         .expect(httpStatus.OK)
         .then((res) => {
-          expect(res.body.username).to.equal('KK');
-          expect(res.body.mobileNumber).to.equal(user.mobileNumber);
+          expect(res.body.username).to.equal(user.username);
+          expect(res.body.capacity).to.equal(user.capacity);
+          expect(res.body.fileMap).to.equal(user.fileMap);
+          user = res.body;
+          done();
+        })
+        .catch(done);
+    });
+  });
+  describe('# PUT /api/users/updateCapacity', () => {
+    it('should change capacity of the user', (done) => {
+      user.capacity = 500;
+
+      request(app)
+        .put('/api/users/update_capacity')
+        .send(user)
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body.capacity).to.equal(500);
+          user = res.body;
+          done();
+        })
+        .catch(done);
+    });
+  });
+  describe('# PUT /api/users/update_filemap', () => {
+    it('should  change fileMap of the user', (done) => {
+      user.fileMap = 'AAAAFFFF';
+
+      request(app)
+        .put('/api/users/update_filemap')
+        .send(user)
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body.fileMap).to.equal('AAAAFFFF');
+          user = res.body;
           done();
         })
         .catch(done);
     });
   });
 
-  describe('# GET /api/users/', () => {
-    it('should get all users', (done) => {
+  describe('# DELETE /api/users/update_filemap', () => {
+    it('should  remove  the user from the system', (done) => {
       request(app)
-        .get('/api/users')
+        .delete('/api/users/leave')
+        .send(user)
         .expect(httpStatus.OK)
         .then((res) => {
-          expect(res.body).to.be.an('array');
+          expect(res.body.username).to.equal(user.username);
+          expect(res.body.capacity).to.equal(user.capacity);
+          expect(res.body.fileMap).to.equal(user.fileMap);
+          user = res.body;
           done();
         })
         .catch(done);
     });
   });
 
-  describe('# DELETE /api/users/', () => {
-    it('should delete user', (done) => {
-      request(app)
-        .delete(`/api/users/${user._id}`)
-        .expect(httpStatus.OK)
-        .then((res) => {
-          expect(res.body.username).to.equal('KK');
-          expect(res.body.mobileNumber).to.equal(user.mobileNumber);
-          done();
-        })
-        .catch(done);
-    });
-  });*/
+  //write the implementation of remove in user controller first
+  // describe('# POST /api/users/signin', () => {
+  //   it('should Fail cause the  user isn\'t on the system ', (done) => {
+  //     request(app)
+  //       .post('/api/users/signin')
+  //       .send(user)
+  //       .expect(httpStatus.OK)
+  //       .then((res) => {
+  //         expect(res.body.username).to.equal(user.username);
+  //         expect(res.body.capacity).to.equal(user.capacity);
+  //         expect(res.body.fileMap).to.equal(user.fileMap);
+  //         user = res.body;
+  //         done();
+  //       })
+  //       .catch(done);
+  //   });
+  // });
+
+
 });
