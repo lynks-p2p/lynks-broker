@@ -10,7 +10,6 @@ const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    default: 'Generic'
     // unique: true
   },
   fileMap: {
@@ -80,6 +79,8 @@ UserSchema.statics.updateMap = (userId, fileMap) => {
       return Promise.reject(err);
     });
 };
+
+
 
   /**
    * List users in descending order of 'createdAt' timestamp.

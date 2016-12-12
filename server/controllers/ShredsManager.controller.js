@@ -1,38 +1,38 @@
 import {createShred} from '../controllers/Shred.controller';
 import {selectPeers} from '../controllers/User.controller';
 import { createShredHostEntry } from '../controllers/ShredHost.controller';
+// import async from 'async';
 
 const defaultShredSize = 1024;
 
 function store(req, res, next) {
-  const hostList = [];
+  const hostsList = [];
 
-  // select peers from user controller
-  const peersList = selectPeers(req.body.userId, req.body.nShreds);
+  selectPeers(req.body.userId, req.body.nShreds)
+    .then((peersList) => {
 
-  // assign peers to shreds with default size
-  for (let i = 0; i < req.body.nShreds - 1; i = i + 1) {
-    hostList.push({
-      shred: createShred(req.body.userId, defaultShredSize, next),
-      host: peersList[i]
+      // assign peers to shreds with default size
+      for (let i = 0; i < req.body.nShreds - 1; i = i + 1) {
+        hostsList.push({
+          shred: createShred(req.body.userId, defaultShredSize, next),
+          host: peersList[i]
+        });
+      }
+
+      // assign a peer to the last shred with size < default size
+      hostsList.push({
+        shred: createShred(req.body.userId, req.body.lastSize, next),
+        host: peersList[req.body.nShreds - 1]
+      });
+
+      // add entries into ShredHost collection
+      for (let i = 0; i < req.body.nShreds; i = i + 1) {
+        createShredHostEntry(hostsList[i].shred, hostsList[i].host, next);
+      }
+
     });
-  }
 
-
-    // console.log('hi');
-    // console.log(peersList);
-  // assign a peer to the last shred with size < default size
-  hostList.push({
-    shred: createShred(req.body.userId, req.body.lastSize, next),
-    host: peersList[req.body.nShreds - 1]
-  });
-
-  // add entries into ShredHost collection
-  for (let i = 0; i < req.body.nShreds; i = i + 1) {
-    createShredHostEntry(hostList[i].shred, hostList[i].host, next);
-  }
-
-  return hostList;
+  return hostsList;
 }
 
 function retrieve(req, res, next) {

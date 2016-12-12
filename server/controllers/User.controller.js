@@ -1,4 +1,5 @@
 import User from '../models/User.model';
+import async from 'async';
 
 function create(req, res, next) {
   const newUser=  new User({
@@ -56,26 +57,41 @@ function updateFilemap(req, res, next){
 }
 
 function selectPeers(userId, nPeers) {
-  const peersList = [];
 
-  for (let i = 0; i < nPeers; i = i + 1) {
-    // Get the count of all users
-    User.count().exec((err, count) => {
-
-      // Get a random entry
-      var random = Math.floor(Math.random() * count);
-
-      // Again query all users but only fetch one offset by our random #
-      User.findOne()
-        .skip(random)
-        .exec((err, result) => {
-          // Tada! random user
-          peersList.push(result._id);
+  return new Promise((resolve, reject) => {
+    const peersList = [];
+    
+    async.waterfall([
+      (callback) => {
+        User.count().then((count) => {
+          callback(null, count);
         });
-    });
-  }
+      },
+      (count, callback) => {
+        // Get a random entry
+        const randoms = [];
 
-  return peersList;
+        for (let i = 0; i < nPeers; i = i + 1) randoms.push(Math.floor(Math.random() * count));
+
+        async.each(randoms, (random, callbackInner) => {
+          User.findOne()
+            .skip(random)
+            .then((result) => {
+              // Tada! random user
+              peersList.push(result._id);
+              callbackInner();
+            });
+        }, (err) => {
+          if (err) throw err;
+          else callback();
+        });
+
+      }
+    ], (err) => {
+      if (err) reject(err);
+      else resolve(peersList);
+    });
+  });
 }
 
 export default { create, get, remove, updateFilemap, updateCapacity, selectPeers };
