@@ -90,7 +90,7 @@ describe('## User APIs', () => {
   });
 
   describe('# DELETE /api/users/leave', () => {
-    it('should  remove  the user from the system', (done) => {
+    it('should remove the user from the system', (done) => {
       request(app)
         .delete('/api/users/leave')
         .send(user)

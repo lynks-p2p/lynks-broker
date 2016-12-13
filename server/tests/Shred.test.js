@@ -47,23 +47,23 @@ after((done) => {
 describe('## Shreds APIs', () => {
 
   const newShredsRequest = {
-    owner: user._id,
+    userId: user._id,
     nShreds: 5,
     lastSize: 99 // in Bytes
   };
 
-  // const getHostsRequest = {
-  //   owner: user._id,
-  //   shredsIds: []
-  // };
-  //
-  // const deleteShredsRequest = {
-  //   owner: user._id,
-  //   shredsIds: [],
-  //   fileMap: 'BBBBBCCCCCC'
-  // };
+  const getHostsRequest = {
+    userId: user._id,
+    shredsIds: []
+  };
 
-  // let hostsList;
+  const deleteShredsRequest = {
+    userId: user._id,
+    shredsIds: [],
+    fileMap: 'BBBBBCCCCCC'
+  };
+
+  let hostsList;
 
   describe('# POST /api/shreds/new', () => {
     it('should create a new shred(s) record', (done) => {
@@ -72,13 +72,13 @@ describe('## Shreds APIs', () => {
         .send(newShredsRequest)
         .expect(httpStatus.OK)
         .then((res) => {
-          expect(res.body.owner).to.equal(newShredsRequest.owner);
+          expect(res.body.owner).to.equal(newShredsRequest.userId.toString());
           expect(res.body.createdShreds).to.be.an('array');
-          res.body.forEach((shredHost) => {
+          res.body.createdShreds.forEach((shredHost) => {
             expect(shredHost).to.have.property('shred');
             expect(shredHost).to.have.property('host');
           });
-          // hostsList = res.body;
+          hostsList = res.body.createdShreds;
           done();
         })
         .catch(done);
@@ -86,49 +86,51 @@ describe('## Shreds APIs', () => {
   });
 
 
-  // describe('# GET /api/shreds/get_hosts', () => {
-  //   it('should get list of hosts consering n shreds of a certain userid', (done) => {
-  //     hostsList.forEach((shredHost) => {
-  //       getHostsRequest.shredsIds.push(shredHost.shred);
-  //     });
-  //     request(app)
-  //       .get('/api/shreds/get_hosts')
-  //       .send(getHostsRequest)
-  //       .expect(httpStatus.OK)
-  //       .then((res) =>{
-  //         expect(res.body).to.be.an('array');
-  //         res.body.forEach((shredHost) => {
-  //           expect(shredHost).to.have.property('shred');
-  //           expect(shredHost).to.have.property('host');
-  //         });
-  //         done();
-  //       })
-  //       .catch(done);
-  //   });
-  // });
-  //
-  // describe('# DELETE /api/shreds/delete', () => {
-  //   it('should change capacity of the user', (done) => {
-  //     hostsList.forEach((shredHost) => {
-  //       deleteShredsRequest.shredsIds.push(shredHost.shred);
-  //     });
-  //     request(app)
-  //       .delete('/api/shreds/delete')
-  //       .send(deleteShredsRequest)
-  //       .expect(httpStatus.OK)
-  //       .then((res) => {
-  //         expect(res.body.fileMap).to.equal(deleteShredsRequest.fileMap);
-  //         expect(res.body.undeletedShreds).to.be.an('array');
-  //         res.res.body.undeletedShreds.forEach((shredHost) => {
-  //           expect(shredHost).to.have.property('shred');
-  //           expect(shredHost).to.have.property('host');
-  //         });
-  //         done();
-  //       })
-  //       .catch(done);
-  //   });
-  // });
+  describe('# GET /api/shreds/get_hosts', () => {
+    it('should get list of hosts having some given shreds identifiers', (done) => {
+      hostsList.forEach((shredHost) => {
+        getHostsRequest.shredsIds.push(shredHost.shred);
+      });
+      request(app)
+        .get('/api/shreds/get_hosts')
+        .send(getHostsRequest)
+        .expect(httpStatus.OK)
+        .then((res) =>{
+          expect(res.body).to.be.an('array');
+          res.body.forEach((shredHost) => {
+            expect(shredHost).to.have.property('shred');
+            expect(shredHost).to.have.property('host');
+            hostsList.forEach((el) => {
+              if (shredHost.shred === el.shred) expect(shredHost.host).to.equal(el.host);
+            });
+          });
+          done();
+        })
+        .catch(done);
+    });
+  });
 
-
+  describe('# DELETE /api/shreds/delete', () => {
+    it('should delete the shreds requested by user, and return exactly number of those deleted', (done) => {
+      hostsList.forEach((shredHost) => {
+        deleteShredsRequest.shredsIds.push(shredHost.shred);
+      });
+      request(app)
+        .delete('/api/shreds/delete')
+        .send(deleteShredsRequest)
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body.fileMap).to.equal(deleteShredsRequest.fileMap);
+          expect(res.body.nRemovedShreds).to.equal(deleteShredsRequest.shredsIds.length);
+          // expect(res.body.undeletedShreds).to.be.an('array');
+          // res.body.undeletedShreds.forEach((shredHost) => {
+          //   expect(shredHost).to.have.property('shred');
+          //   expect(shredHost).to.have.property('host');
+          // });
+          done();
+        })
+        .catch(done);
+    });
+  });
 
 });

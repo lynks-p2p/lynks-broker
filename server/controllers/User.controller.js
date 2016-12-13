@@ -60,7 +60,7 @@ function selectPeers(userId, nPeers) {
 
   return new Promise((resolve, reject) => {
     const peersList = [];
-    
+
     async.waterfall([
       (callback) => {
         User.count().then((count) => {

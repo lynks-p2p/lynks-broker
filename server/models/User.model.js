@@ -1,7 +1,7 @@
-import Promise from 'bluebird';
+// import Promise from 'bluebird';
 import mongoose from 'mongoose';
-import httpStatus from 'http-status';
-import APIError from '../helpers/APIError';
+// import httpStatus from 'http-status';
+// import APIError from '../helpers/APIError';
 
 /**
  * User Schema
@@ -27,58 +27,58 @@ const UserSchema = new mongoose.Schema({
 /**
  * Methods
  */
-UserSchema.methods.methodName = () => {
-
-};
+// UserSchema.methods.methodName = () => {
+//
+// };
 
 /**
  * Statics
  */
-UserSchema.statics.get = (userId) => {
-  return this.findOne({_id: userId})
-    .exec()
-    .then((user) => {
-      if (user) {
-        return user;
-      }
-      const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
-      return Promise.reject(err);
-    });
-};
-
-UserSchema.statics.remove = (userId) => {
-  return this.findOneaAndRemove({_id: userId})
-    .exec();
-};
+// UserSchema.statics.get = (userId) => {
+//   return this.findOne({_id: userId})
+//     .exec()
+//     .then((user) => {
+//       if (user) {
+//         return user;
+//       }
+//       const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+//       return Promise.reject(err);
+//     });
+// };
+//
+// UserSchema.statics.remove = (userId) => {
+//   return this.findOneaAndRemove({_id: userId})
+//     .exec();
+// };
 
 // we assume that it is possible to save here -- double check?
-UserSchema.statics.updateCap = (userId, capacity) => {
-  return this.findOne({_id: userId})
-    .exec()
-    .then((user) => {
-      if (user) {
-        user.capacity= capacity;
-        user.save();
-        return user;
-      }
-      const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
-      return Promise.reject(err);
-    });
-};
+// UserSchema.statics.updateCap = (userId, capacity) => {
+//   return this.findOne({_id: userId})
+//     .exec()
+//     .then((user) => {
+//       if (user) {
+//         user.capacity= capacity;
+//         user.save();
+//         return user;
+//       }
+//       const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+//       return Promise.reject(err);
+//     });
+// };
 
-UserSchema.statics.updateMap = (userId, fileMap) => {
-  return this.findOne({_id: userId})
-    .exec()
-    .then((user) => {
-      if (user) {
-        user.fileMap = fileMap;
-        user.save();          //we assume that it is possible to save here
-        return user;
-      }
-      const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
-      return Promise.reject(err);
-    });
-};
+// UserSchema.statics.updateMap = (userId, fileMap) => {
+//   return this.findOne({_id: userId})
+//     .exec()
+//     .then((user) => {
+//       if (user) {
+//         user.fileMap = fileMap;
+//         user.save();          //we assume that it is possible to save here
+//         return user;
+//       }
+//       const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+//       return Promise.reject(err);
+//     });
+// };
 
 
 

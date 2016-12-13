@@ -1,6 +1,6 @@
 import express from 'express';
 import userRoutes from './User.route';
-import authRoutes from './auth.route';
+// import authRoutes from './auth.route';
 import shredRoutes from './Shred.route';
 
 const router = express.Router(); // eslint-disable-line new-cap
@@ -16,6 +16,6 @@ router.use('/users', userRoutes);
 router.use('/shreds',shredRoutes);
 
 // mount auth routes at /auth
-router.use('/auth', authRoutes);
+// router.use('/auth', authRoutes);
 
 export default router;

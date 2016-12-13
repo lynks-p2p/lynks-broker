@@ -1,7 +1,7 @@
-import Promise from 'bluebird';
+// import Promise from 'bluebird';
 import mongoose from 'mongoose';
-import httpStatus from 'http-status';
-import APIError from '../helpers/APIError';
+// import httpStatus from 'http-status';
+// import APIError from '../helpers/APIError';
 
 /**
  * Shred Schema
@@ -22,23 +22,23 @@ const ShredSchema = new mongoose.Schema({
 /**
  * Methods
  */
-ShredSchema.methods.methodName = () => {
-
-};
+// ShredSchema.methods.methodName = () => {
+//
+// };
 
 /**
  * Statics
  */
-ShredSchema.statics.get  = (id) => {
-  return this.findById(id)
-    .exec()
-    .then((shred) => {
-      if (shred) {
-        return shred;
-      }
-      const err = new APIError('No such shred exists!', httpStatus.NOT_FOUND);
-      return Promise.reject(err);
-    });
-};
+// ShredSchema.statics.get  = (id) => {
+//   return this.findById(id)
+//     .exec()
+//     .then((shred) => {
+//       if (shred) {
+//         return shred;
+//       }
+//       const err = new APIError('No such shred exists!', httpStatus.NOT_FOUND);
+//       return Promise.reject(err);
+//     });
+// };
 
 export default mongoose.model('Shred', ShredSchema);
