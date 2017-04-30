@@ -11,11 +11,11 @@ function create(req, res, next) {
 
   User.findOne({_id: newUser._id})
     .then((user) => {
-      console.log(user)
-      res.json(user)
+      console.log(user);
+      res.json(user);
     }, (res) => {
-      console.log(res)
-    })
+      console.log(res);
+    });
 
   // newUser.save()
   //   .then(savedUser => res.json(savedUser))

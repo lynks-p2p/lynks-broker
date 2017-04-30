@@ -1,6 +1,6 @@
 // import Promise from 'bluebird';
 import mongoose from 'mongoose';
-import SHA1 from 'crypto-js/sha1';
+// import SHA1 from 'crypto-js/sha1';
 // import httpStatus from 'http-status';
 // import APIError from '../helpers/APIError';
 
