@@ -1,15 +1,25 @@
 import User from '../models/User.model';
+import SHA1 from 'crypto-js/sha1'
 import async from 'async';
 
 function create(req, res, next) {
   const newUser=  new User({
     username: req.body.username,
-    capacity: req.body.capacity,
-    fileMap: ''
+    _id: SHA1(req.body.username),
+    fileMap: req.body.fileMap
   });
-  newUser.save()
-    .then(savedUser => res.json(savedUser))
-    .catch(e => next(e));
+
+  User.findOne({_id: newUser._id})
+    .then((user) => {
+      console.log(user)
+      res.json(user)
+    }, (res) => {
+      console.log(res)
+    })
+
+  // newUser.save()
+  //   .then(savedUser => res.json(savedUser))
+  //   .catch(e => next(e));
 }
 
 function get(req, res, next) {
