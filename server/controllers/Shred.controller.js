@@ -1,14 +1,37 @@
-// uncomment this
-// import Shred from '../models/Shred.model';
+import Shred from '../models/Shred.model';
 
-/**
- * Comment the function
- */
-function name(req, res, next, any, other, params) {
-  // DO IT
+// create new shred
+function createShred(ownerId, shredSize, next) {
+  return new Promise((resolve) => {
 
-  // dumb
-  return req + res + next + any + other + params;
+    const shred = new Shred({
+      owner: ownerId,
+      size: shredSize
+    });
+
+    shred.save()
+      .then((savedShred) => {
+        resolve(savedShred._id);
+      })
+      .catch(e => next(e));
+
+  });
 }
 
-export default { name };
+// Load shred and return it in response
+// function getShred(shredId) {
+//   return Shred.findOne({_id: shredId});
+// }
+
+// remove shred
+function removeShred(shredId, next) {
+  return new Promise(function(resolve) {
+    Shred.remove({_id: shredId})
+      .then((nRemoved) => {
+        resolve(nRemoved);
+      })
+      .catch((e) => next(e));
+  });
+}
+
+export default { createShred, removeShred };
