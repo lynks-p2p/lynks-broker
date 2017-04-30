@@ -8,12 +8,12 @@ import mongoose from 'mongoose';
  * User Schema
  */
 const UserSchema = new mongoose.Schema({
-  _id: {
+  username: {
     type: String,
     required: true,
     unique: true
   },
-  username: {
+  networkID: {
     type: String,
     required: true,
     unique: true
