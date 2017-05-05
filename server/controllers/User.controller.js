@@ -72,14 +72,20 @@ function updateCapacity(req,res,next){
 }
 
 function updateFilemap(req, res, next){
-  User.findOne({_id: req.body._id})
-    .then((user) => {
-      user.fileMap = req.body.fileMap;
-      user.save()
-        .then(savedUser => res.json(savedUser))
-        .catch(e => next(e));
+  User.findOne({username: req.body.username})
+    .then(user => {
+      if (!user) {
+        res.status(500).send({
+         message: 'User does not exist'
+        })
+      } else {
+        user.fileMap = req.body.fileMap;
+        user.save()
+          .then(savedUser => res.json({userID: savedUser.networkID, fileMap: savedUser.fileMap}))
+          .catch(e => next(e));
+      }
     })
-    .catch(e=>next(e));
+    .catch(e => next(e));
 }
 
 function selectPeers(userId, nPeers) {
