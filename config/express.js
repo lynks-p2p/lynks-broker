@@ -13,6 +13,9 @@ import winstonInstance from './winston';
 import routes from '../server/routes/index.route';
 import config from './env';
 import APIError from '../server/helpers/APIError';
+import levelup from 'levelup'
+
+let node;
 
 import ip from 'ip';
 import kad from 'kad';
@@ -24,8 +27,15 @@ if (config.env === 'development') {
 }
 
 // parse body params and attache them to req.body
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+
+// set limit size (filemap update)
+// import bodyParser from 'body-parser';
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
+
 
 app.use(cookieParser());
 app.use(compress());
@@ -88,6 +98,7 @@ app.use((err, req, res, next) => // eslint-disable-line no-unused-vars
 );
 
 
+
 // DHT starts here
 function initDHT(ip, port, networkID, seed, callback) {
   //MyIp , myID : strings
@@ -132,7 +143,8 @@ function initDHT(ip, port, networkID, seed, callback) {
   });
 }
 
-initDHT(ip.address(), 1337, 'THISISTHEBESTBROKER!', [Buffer.from('THISISTHEBESTBROKER!').toString('hex'), { hostname: ip.address(), port: 1337 }];, () => {
+initDHT(ip.address(), 1337, 'THISISTHEBESTBROKER!', [Buffer.from('THISISTHEBESTBROKER!').toString('hex'), { hostname: ip.address(), port: 1337 }], () => {
+  console.log('ip: ' + ip.address());
   console.log('-- DHT  INIT')
 });
 
