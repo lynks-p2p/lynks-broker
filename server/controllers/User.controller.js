@@ -1,20 +1,46 @@
 import User from '../models/User.model';
+import mongoose from 'mongoose';
+import SHA1 from 'crypto-js/sha1';
 import async from 'async';
 
 function create(req, res, next) {
   const newUser=  new User({
     username: req.body.username,
-    capacity: req.body.capacity,
-    fileMap: ''
+    networkID: SHA1(req.body.username),
+    fileMap: new Buffer(req.body.fileMap)
   });
-  newUser.save()
-    .then(savedUser => res.json(savedUser))
-    .catch(e => next(e));
+
+  User.findOne({username: newUser.username})
+    .then((user) => {
+      if (user) {
+        res.status(500).send({
+         message: 'User already exists'
+        })
+      } else {
+        newUser.save()
+          .then(savedUser => {
+            res.json({userID: savedUser._id})
+            })
+          .catch(e => next(e));
+      }
+    });
+
+  // newUser.save()
+  //   .then(savedUser => res.json(savedUser))
+  //   .catch(e => next(e));
 }
 
 function get(req, res, next) {
-  User.findOne({_id: req.body._id})
-    .then(user => res.json(user))
+  User.findOne({username: req.body.username})
+    .then(user => {
+      if (!user) {
+        res.status(500).send({
+         message: 'User does not exist'
+        })
+      } else {
+        res.json({userID: user.networkID, fileMap: user.fileMap})
+      }
+    })
     .catch(e => next(e));
 }
 
@@ -46,14 +72,21 @@ function updateCapacity(req,res,next){
 }
 
 function updateFilemap(req, res, next){
-  User.findOne({_id: req.body._id})
-    .then((user) => {
-      user.fileMap = req.body.fileMap;
-      user.save()
-        .then(savedUser => res.json(savedUser))
-        .catch(e => next(e));
+  User.findOne({username: req.body.username})
+    .then(user => {
+      console.log(user);
+      if (!user) {
+        res.status(500).send({
+         message: 'User does not exist'
+        })
+      } else {
+        user.fileMap = new Buffer(req.body.fileMap);
+        user.save()
+          .then(savedUser => res.json({userID: savedUser.networkID, fileMap: savedUser.fileMap}))
+          .catch(e => next(e));
+      }
     })
-    .catch(e=>next(e));
+    .catch(e => next(e));
 }
 
 function selectPeers(userId, nPeers) {

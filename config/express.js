@@ -13,6 +13,12 @@ import winstonInstance from './winston';
 import routes from '../server/routes/index.route';
 import config from './env';
 import APIError from '../server/helpers/APIError';
+import levelup from 'levelup'
+
+let node;
+
+import ip from 'ip';
+import kad from 'kad';
 
 const app = express();
 
@@ -21,8 +27,15 @@ if (config.env === 'development') {
 }
 
 // parse body params and attache them to req.body
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+
+// set limit size (filemap update)
+// import bodyParser from 'body-parser';
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
+
 
 app.use(cookieParser());
 app.use(compress());
@@ -83,5 +96,56 @@ app.use((err, req, res, next) => // eslint-disable-line no-unused-vars
     stack: config.env === 'development' ? err.stack : {}
   })
 );
+
+
+
+// DHT starts here
+function initDHT(ip, port, networkID, seed, callback) {
+  //MyIp , myID : strings
+  //myPort : int, preferably 8080
+  //mySeed is an object of that shape:-
+                    //   const seed = [
+                    //   'hostname_IDENTITY',
+                    //   { hostname: 'hostname_IP', port: hostname_PORT }
+                    // ];
+
+
+  //TO DO:  use the hash(myID) and not the myID
+  node = kad({
+    transport: new kad.UDPTransport(),
+    storage: levelup('./DHT_Storage/'),
+    contact: { hostname: ip , port: port },
+    identity: Buffer.from(networkID)
+  });
+
+
+
+  const logsOn = false;
+
+  if (logsOn) {
+    node.use((request, response, next) => {
+      console.log('\n---------------------------------------------------------')
+      console.log('## REQ')
+      console.log(request)
+      console.log('## RES')
+      console.log(response)
+      console.log('---------------------------------------------------------\n')
+
+      next();
+    });
+  }
+
+  node.listen(port, () => {
+    node.join(seed, () => {
+      console.log('Successfuly connected to Seed '+seed[1]['hostname']+':'+seed[1]['port']);
+      callback();
+    })
+  });
+}
+
+initDHT(ip.address(), 1337, 'THISISTHEBESTBROKER!', [Buffer.from('THISISTHEBESTBROKER!').toString('hex'), { hostname: ip.address(), port: 1337 }], () => {
+  console.log('ip: ' + ip.address());
+  console.log('-- DHT  INIT')
+});
 
 export default app;
