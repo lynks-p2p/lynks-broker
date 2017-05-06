@@ -1,5 +1,6 @@
 // import Promise from 'bluebird';
 import mongoose from 'mongoose';
+// import SHA1 from 'crypto-js/sha1';
 // import httpStatus from 'http-status';
 // import APIError from '../helpers/APIError';
 
@@ -10,17 +11,16 @@ const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    // unique: true
+    unique: true
+  },
+  networkID: {
+    type: String,
+    required: true,
+    unique: true
   },
   fileMap: {
-    type: String,
-    default: ''
-  },
-  // user's offered storage capacity in MB
-  capacity: {
-    type: Number,
-    required: true,
-    default: 0
+    type: Buffer,
+    required: true
   }
 });
 
