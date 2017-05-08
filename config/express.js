@@ -13,12 +13,14 @@ import winstonInstance from './winston';
 import routes from '../server/routes/index.route';
 import config from './env';
 import APIError from '../server/helpers/APIError';
-import levelup from 'levelup'
+import levelup from 'levelup';
+
 
 let node;
 
 import ip from 'ip';
 import kad from 'kad';
+import quasar from 'kad-quasar';
 
 const app = express();
 
@@ -137,14 +139,22 @@ function initDHT(ip, port, networkID, seed, callback) {
 
   node.listen(port, () => {
     node.join(seed, () => {
-      console.log('Successfuly connected to Seed '+seed[1]['hostname']+':'+seed[1]['port']);
+
+      node.plugin(quasar);
+
+      console.log('Successfuly started Broker');
+
+
       callback();
     })
   });
 }
 
-initDHT(ip.address(), 1337, 'THISISTHEBESTBROKER!', [Buffer.from('THISISTHEBESTBROKER!').toString('hex'), { hostname: ip.address(), port: 1337 }], () => {
-  console.log('ip: ' + ip.address());
+const brokerDHTPort = 1337;
+
+initDHT(ip.address(), brokerDHTPort, 'THISISTHEBESTBROKER!', [Buffer.from('THISISTHEBESTBROKER!').toString('hex'), { hostname: ip.address(), port: brokerDHTPort }], () => {
+  console.log('Addr  ' + ip.address() + ':' + brokerDHTPort);
+  console.log('NetID ' + 'THISISTHEBESTBROKER!')
   console.log('-- DHT  INIT')
 });
 
