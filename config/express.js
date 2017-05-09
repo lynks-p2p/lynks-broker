@@ -140,7 +140,7 @@ function initDHT(ip, port, networkID, seed, callback) {
   node.listen(port, () => {
     node.join(seed, () => {
 
-      node.plugin(quasar);
+      // node.plugin(quasar);
 
       console.log('Successfuly started Broker');
 
